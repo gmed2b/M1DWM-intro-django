@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block page_title %}
+  Login Page
+{% endblock page_title %}
+
+{% block content %}
+<main class="grid place-items-center py-10">
+
+  <div class="bg-steel-gray-950 text-steel-gray-50 space-y-10 p-12 rounded-md shadow-lg">
+
+    <div class="space-y-5">
+      <h1 class="text-3xl font-semibold">
+        Log in to your account
+      </h1>
+      <p class="text-xs text-steel-gray-400 font-light">
+        Don't have an account? <a href="{% url 'register' %}" class="text-blue-violet-400 underline">Register</a>
+      </p>
+
+      {% if messages %}
+        {% for message in messages %}
+          <div class="p-3 rounded-md {% if message.tags %}bg-{{ message.tags }}-500 text-white{% else %}bg-gray-500 text-white{% endif %}">
+            <p>{{ message }}</p>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+
+
+    <form action="{% url 'login' %}" method="post" class="flex flex-col gap-5">
+      {% csrf_token %}
+
+      {% for field in form %}
+        <div class="flex flex-col gap-1">
+          {{ field }}
+          <div class="text-red-500 text-sm">{{ field.errors }}</div>
+        </div>
+      {% endfor %}
+
+      <button type="submit" class="text-sm py-3 mt-3 rounded-md  bg-blue-violet-700 text-white hover:bg-blue-violet-800">
+        Login
+      </button>
+    </form>
+
+  </div>
+</main>
+{% endblock content %}
