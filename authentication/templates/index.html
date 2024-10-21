@@ -1,21 +1,22 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<main class="grid place-items-center py-10">
-  <h1 class="text-white text-3xl font-bold">Welcome!</h1>
+<main>
+  <nav class="flex flex-row items-center justify-between py-3 px-5 bg-steel-gray-700 shadow-md">
+    <h1 class="text-white text-3xl font-bold">ItemStacker!</h1>
 
-  {% if user.is_authenticated %}
-    <p class="text-white text-lg">You are logged in as {{ user.username }}</p>
-  {% else %}
-    <div class="mt-5">
-      <a href="/register" class="text-blue-violet-400 underline">Register</a>
-      <a href="/login" class="text-blue-violet-400 underline">Login</a>
+    <div class="flex flex-row gap-3">
+      {% if user.is_authenticated %}
+        <p class="text-white text-lg">You are logged in as {{ user.username }}</p>
+        <a href="{% url 'logout' %}" class="text-blue-violet-200 underline">Logout</a>
+      {% else %}
+        <a href="{% url 'register' %}" class="text-blue-violet-200 underline">Register</a>
+        <a href="{% url 'login' %}" class="text-blue-violet-200 underline">Login</a>
+      {% endif %}
     </div>
-  {% endif %}
+  </nav>
 
-
-
-  <div class="absolute top-0 right-0 p-5">
+  <div class="absolute bottom-0 right-0 p-5">
     {% if messages %}
       {% for message in messages %}
       <div class="p-3 rounded-md {% if message.tags %}bg-{{ message.tags }}-500 text-white{% else %}bg-gray-500 text-white{% endif %}">

@@ -1,49 +1,11 @@
 from django.shortcuts import render, redirect
 from authentication.forms import LoginForm, RegisterForm
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib import messages
 
 def index(request):
     return render(request, "index.html")
-
-
-def login(request):
-    # if this is a POST request we need to process the form data
-    if request.method == "POST":
-        # create a form instance and populate it with data from the request:
-        form = LoginForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            # process the data in form.cleaned_data as required
-            username = form.cleaned_data.get("username")
-            password = form.cleaned_data.get("password")
-
-            # Check if the user exists
-            user = authenticate(request, username=username, password=password)
-            if user is None:
-                form.add_error("password", "Username or password incorrect")
-                return render(request, "login.html", {"form": form})
-
-            # user has entered valid credentials, he can now be logged in
-            auth_login(request, user)
-
-            # set a flash message and redirect to the index page
-            messages.success(request, "You have been logged in successfully!")
-
-            return redirect("index")
-        else:
-            messages.error(request, "Invalid form data")
-            return redirect("login")
-
-    # if a GET we'll create a blank form
-    else:
-        form = LoginForm()
-
-    context = {
-        "form": form
-    }
-    return render(request, "login.html", context)
 
 
 def register(request):
@@ -96,8 +58,57 @@ def register(request):
     # if a GET we'll create a blank form
     else:
         form = RegisterForm()
+        context = {
+            "form": form
+        }
+        return render(request, "register.html", context)
 
-    context = {
-        "form": form
-    }
-    return render(request, "register.html", context)
+
+def login(request):
+    # if this is a POST request we need to process the form data
+    if request.method == "POST":
+        # create a form instance and populate it with data from the request:
+        form = LoginForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            username = form.cleaned_data.get("username")
+            password = form.cleaned_data.get("password")
+
+            # Check if the user exists
+            user = authenticate(request, username=username, password=password)
+            if user is None:
+                form.add_error("password", "Username or password incorrect")
+                return render(request, "login.html", {"form": form})
+
+            # user has entered valid credentials, he can now be logged in
+            auth_login(request, user)
+
+            # set a flash message and redirect to the index page
+            messages.success(request, "You have been logged in successfully!")
+
+            return redirect("index")
+        else:
+            messages.error(request, "Invalid form data")
+            return redirect("login")
+
+    # if a GET we'll create a blank form
+    else:
+        if request.user.is_authenticated:
+            return redirect("index")
+        form = LoginForm()
+        context = {
+            "form": form
+        }
+        return render(request, "login.html", context)
+
+
+def logout(request):
+    if request.user.is_authenticated:
+        auth_logout(request)
+        messages.success(request, "You have been logged out successfully!")
+        return redirect("login")
+    else:
+        messages.error(request, "You are not logged in")
+        return redirect("login")
+
