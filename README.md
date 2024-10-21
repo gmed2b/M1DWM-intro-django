@@ -1,4 +1,4 @@
-# Systeme d'authentification en Django
+# Projet développement web avec Django
 
 ## Aperçu du Projet
 
@@ -35,8 +35,8 @@ python manage.py runserver
 
 - **intro-django/**: Contient les paramètres principaux du projet et les URLs.
 - **authentication/**: Contient l'application d'authentification avec les modèles, vues, formulaires et templates.
-- **authentication/static/**: Contient les fichiers statiques comme le CSS.
-- **authentication/templates/**: Contient les templates HTML.
+- **inventorymanager/**: Contient l'application de gestion des joueurs et items avec les modèles, vues, formulaires et templates.
+- **static/**: Contient les fichiers statiques comme le CSS.
 - **manage.py**: Utilitaire en ligne de commande de Django pour les tâches administratives.
 - **tailwind.config.js**: Fichier de configuration pour Tailwind CSS.
 - **db.sqlite3**: Fichier de base de données SQLite.
