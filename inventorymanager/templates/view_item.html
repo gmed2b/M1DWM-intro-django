@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<main class="grid place-items-center py-10">
+
+  <div class="bg-steel-gray-950 text-steel-gray-50 space-y-10 p-12 rounded-md shadow-lg">
+
+    <div class="space-y-5">
+      <a href="{% url 'view_player' player.id %}" class="text-sm text-blue-violet-500 hover:underline">
+        &larr; Back to player details
+      </a>
+      <h1 class="text-3xl font-semibold">
+        Edit item: {{ item.item_name }}
+      </h1>
+
+      {% if messages %}
+      {% for message in messages %}
+      <div
+        class="p-3 rounded-md {% if message.tags %}bg-{{ message.tags }}-500 text-white{% else %}bg-gray-500 text-white{% endif %}">
+        <p>{{ message }}</p>
+      </div>
+      {% endfor %}
+      {% endif %}
+    </div>
+
+    <form action="{% url 'edit_item' player.id item.id %}" method="post" class="flex flex-col gap-5">
+      {% csrf_token %}
+
+      {% for field in form %}
+      <div class="flex flex-col gap-1">
+        <span class="text-xs text-steel-gray-500">{{ field.label_tag }}</span>
+        {{ field }}
+        <div class="text-red-500 text-sm">{{ field.errors }}</div>
+      </div>
+      {% endfor %}
+
+      <button type="submit" class="py-3 mt-3 rounded-md shadow bg-blue-violet-700 text-white hover:bg-blue-violet-800">
+        Save Changes
+      </button>
+    </form>
+
+  </div>
+</main>
+{% endblock content %}

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>
+    {% block page_title %} Inventory managment {% endblock page_title %}
+  </title>
+
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/output.css' %}" />
+</head>
+
+<body class="bg-steel-gray-900">
+  {% block content %} {% endblock content %}
+  <div class="hidden">
+    <div class="bg-gray-500"></div>
+    <div class="bg-cyan-500"></div>
+    <div class="bg-green-500"></div>
+    <div class="bg-yellow-500"></div>
+    <div class="bg-red-500"></div>
+  </div>
+</body>
+
+</html>
