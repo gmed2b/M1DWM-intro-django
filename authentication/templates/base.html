@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,9 +10,11 @@
 
   {% load static %}
   <link rel="stylesheet" href="{% static 'css/output.css' %}">
-
+  <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
 </head>
+
 <body class="bg-steel-gray-900">
   {% block content %} {% endblock content %}
 </body>
+
 </html>
