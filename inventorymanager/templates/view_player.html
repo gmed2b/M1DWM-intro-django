@@ -1,4 +1,5 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %}
+{% block content %}
 <main class="flex flex-col p-10 max-w-5xl space-y-10 mx-auto text-steel-gray-50">
   <div class="bg-steel-gray-950 text-steel-gray-50 self-center space-y-5 p-12 rounded-md shadow-lg">
     <div class="space-y-4">
@@ -6,21 +7,23 @@
         &larr; Back to players
       </a>
 
-      {% if messages %} {% for message in messages %}
-      <div
-        class="p-3 rounded-md {% if message.tags %}bg-{{ message.tags }}-500 text-white{% else %}bg-gray-500 text-white{% endif %}">
-        <p>{{ message }}</p>
-      </div>
-      {% endfor %} {% endif %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="p-3 rounded-md {% if message.tags %}bg-{{ message.tags }}-500 text-white{% else %}bg-gray-500 text-white{% endif %}">
+            <p>{{ message }}</p>
+          </div>
+        {% endfor %}
+      {% endif %}
     </div>
 
     <form action="{% url 'edit_player' player.id %}" method="post" class="flex flex-row items-end gap-5">
-      {% csrf_token %} {% for field in form %}
-      <div class="flex flex-col">
-        <span class="text-xs text-steel-gray-500 mb-1">{{ field.label_tag }}</span>
-        {{ field }}
-        <div class="text-red-500 text-sm">{{ field.errors }}</div>
-      </div>
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="flex flex-col">
+          <span class="text-xs text-steel-gray-500 mb-1">{{ field.label_tag }}</span>
+          {{ field }}
+          <div class="text-red-500 text-sm">{{ field.errors }}</div>
+        </div>
       {% endfor %}
 
       <button type="submit" class="py-3 px-5 rounded-md shadow bg-blue-violet-700 text-white hover:bg-blue-violet-800">
@@ -50,6 +53,11 @@
                 Item Quantity
               </p>
             </th>
+            <th class="py-4 border-b">
+              <p class="block font-sans text-sm antialiased font-bold leading-none opacity-90">
+                Item Type
+              </p>
+            </th>
             <th class="border-b w-40">
               <p class="block font-sans text-sm antialiased font-bold leading-none opacity-90">
                 Actions
@@ -68,6 +76,11 @@
             <td class="py-4">
               <p class="block font-sans text-sm antialiased font-normal leading-normal">
                 {{ item.item_quantity }}
+              </p>
+            </td>
+            <td class="py-4">
+              <p class="block font-sans text-sm antialiased font-normal leading-normal">
+                {{ item.item_type }} <!-- Affichage du type d'élément -->
               </p>
             </td>
             <td class="py-4 space-x-1">

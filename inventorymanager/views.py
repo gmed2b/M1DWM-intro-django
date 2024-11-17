@@ -113,6 +113,7 @@ def add_item(request, player_id):
         if form.is_valid():
             item_name = form.cleaned_data.get("item_name")
             item_quantity = form.cleaned_data.get("item_quantity")
+            item_type = form.cleaned_data.get("item_type")
 
             if item_quantity < 0:
                 form.add_error("item_quantity", "Item quantity cannot be negative")
@@ -121,7 +122,7 @@ def add_item(request, player_id):
                 )
 
             Inventory.objects.create(
-                player=player, item_name=item_name, item_quantity=item_quantity
+                player=player, item_name=item_name, item_quantity=item_quantity, item_type=item_type
             )
             messages.success(request, "Item added successfully")
             return redirect("view_player", player_id=player_id)
@@ -148,7 +149,7 @@ def view_item(request, player_id, item_id):
         return redirect("view_player", player_id=player_id)
 
     form = ItemForm(
-        data={"item_name": item.item_name, "item_quantity": item.item_quantity}
+        data={"item_name": item.item_name, "item_quantity": item.item_quantity, "item_type": item.item_type}
     )
     context = {"form": form, "player": player, "item": item}
     return render(request, "view_item.html", context)
@@ -174,6 +175,7 @@ def edit_item(request, player_id, item_id):
         if form.is_valid():
             item_name = form.cleaned_data.get("item_name")
             item_quantity = form.cleaned_data.get("item_quantity")
+            item_type = form.cleaned_data.get("item_type")
 
             if item_quantity < 0:
                 form.add_error("item_quantity", "Item quantity cannot be negative")
@@ -183,6 +185,7 @@ def edit_item(request, player_id, item_id):
 
             item.item_name = item_name
             item.item_quantity = item_quantity
+            item.item_type = item_type  # Cette ligne manque
             item.save()
 
             messages.success(request, "Item updated successfully")
