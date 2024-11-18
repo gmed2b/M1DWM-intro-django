@@ -56,6 +56,10 @@
             <th class="py-4 border-b">
               <p class="block font-sans text-sm antialiased font-bold leading-none opacity-90">
                 Item Type
+                <!-- Bouton de tri -->
+                <button onclick="sortTable()" id="sort-button" class="text-sm text-blue-violet-500 hover:underline ml-2">
+                  &#x2195; <!-- Symbole de la flèche -->
+                </button>
               </p>
             </th>
             <th class="border-b w-40">
@@ -65,7 +69,7 @@
             </th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="inventoryTable">
           {% for item in player_inventory %}
           <tr class="border-b border-steel-gray-900">
             <td class="p-4">
@@ -100,6 +104,36 @@
 </main>
 
 <script>
+  // Variable pour suivre l'ordre du tri
+  let isAscending = true;
+
+  function sortTable() {
+    const table = document.getElementById("inventoryTable");
+    const rows = Array.from(table.rows);
+
+    // Si la table n'a pas de lignes, rien à trier
+    if (rows.length < 2) return;
+
+    // Tri des lignes en fonction de la colonne "Item Type"
+    rows.sort((a, b) => {
+      const aType = a.cells[2].textContent.trim().toLowerCase();
+      const bType = b.cells[2].textContent.trim().toLowerCase();
+
+      // Si l'ordre est ascendant, trier de manière croissante, sinon décroissante
+      return isAscending ? aType.localeCompare(bType) : bType.localeCompare(aType);
+    });
+
+    // Réinsertion des lignes triées dans le tableau
+    rows.forEach(row => table.appendChild(row));
+
+    // Inverser l'ordre du tri pour le prochain clic
+    isAscending = !isAscending;
+
+    // Change la direction de l'icône (flèche)
+    const button = document.getElementById('sort-button');
+    button.innerHTML = isAscending ? '&#x2191;' : '&#x2193;';
+  }
+
   const deleteItemButtons = document.querySelectorAll('#delete-item');
 
   deleteItemButtons.forEach((button) => {

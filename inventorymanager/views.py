@@ -53,14 +53,28 @@ def view_player(request, player_id):
         return redirect("players")
 
     try:
-        player_inventory = Inventory.objects.filter(player=player).all()
+        # Récupération des items du joueur
+        player_inventory = Inventory.objects.filter(player=player)
     except Inventory.DoesNotExist:
         player_inventory = None
 
+    # Obtention du paramètre de tri depuis l'URL, valeur par défaut est 'asc'
+    sort_type = request.GET.get('sort_type', 'asc')
+
+    # Tri des items en fonction du type
+    if sort_type == 'desc':
+        player_inventory = player_inventory.order_by('-item_type')
+    else:
+        player_inventory = player_inventory.order_by('item_type')
+
+    # Création du formulaire pour afficher les informations du joueur
     form = PlayerForm(
         data={"player_name": player.player_name, "player_level": player.player_level}
     )
-    context = {"form": form, "player": player, "player_inventory": player_inventory}
+
+    # Contexte à passer à la vue
+    context = {"form": form, "player": player, "player_inventory": player_inventory, 'sort_type': sort_type}
+
     return render(request, "view_player.html", context)
 
 
