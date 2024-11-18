@@ -53,14 +53,28 @@ def view_player(request, player_id):
         return redirect("players")
 
     try:
-        player_inventory = Inventory.objects.filter(player=player).all()
+        # Récupération des items du joueur
+        player_inventory = Inventory.objects.filter(player=player)
     except Inventory.DoesNotExist:
         player_inventory = None
 
+    # Obtention du paramètre de tri depuis l'URL, valeur par défaut est 'asc'
+    sort_type = request.GET.get('sort_type', 'asc')
+
+    # Tri des items en fonction du type
+    if sort_type == 'desc':
+        player_inventory = player_inventory.order_by('-item_type')
+    else:
+        player_inventory = player_inventory.order_by('item_type')
+
+    # Création du formulaire pour afficher les informations du joueur
     form = PlayerForm(
         data={"player_name": player.player_name, "player_level": player.player_level}
     )
-    context = {"form": form, "player": player, "player_inventory": player_inventory}
+
+    # Contexte à passer à la vue
+    context = {"form": form, "player": player, "player_inventory": player_inventory, 'sort_type': sort_type}
+
     return render(request, "view_player.html", context)
 
 
@@ -113,6 +127,7 @@ def add_item(request, player_id):
         if form.is_valid():
             item_name = form.cleaned_data.get("item_name")
             item_quantity = form.cleaned_data.get("item_quantity")
+            item_type = form.cleaned_data.get("item_type")
 
             if item_quantity < 0:
                 form.add_error("item_quantity", "Item quantity cannot be negative")
@@ -121,7 +136,7 @@ def add_item(request, player_id):
                 )
 
             Inventory.objects.create(
-                player=player, item_name=item_name, item_quantity=item_quantity
+                player=player, item_name=item_name, item_quantity=item_quantity, item_type=item_type
             )
             messages.success(request, "Item added successfully")
             return redirect("view_player", player_id=player_id)
@@ -148,7 +163,7 @@ def view_item(request, player_id, item_id):
         return redirect("view_player", player_id=player_id)
 
     form = ItemForm(
-        data={"item_name": item.item_name, "item_quantity": item.item_quantity}
+        data={"item_name": item.item_name, "item_quantity": item.item_quantity, "item_type": item.item_type}
     )
     context = {"form": form, "player": player, "item": item}
     return render(request, "view_item.html", context)
@@ -174,6 +189,7 @@ def edit_item(request, player_id, item_id):
         if form.is_valid():
             item_name = form.cleaned_data.get("item_name")
             item_quantity = form.cleaned_data.get("item_quantity")
+            item_type = form.cleaned_data.get("item_type")
 
             if item_quantity < 0:
                 form.add_error("item_quantity", "Item quantity cannot be negative")
@@ -183,6 +199,7 @@ def edit_item(request, player_id, item_id):
 
             item.item_name = item_name
             item.item_quantity = item_quantity
+            item.item_type = item_type  # Cette ligne manque
             item.save()
 
             messages.success(request, "Item updated successfully")

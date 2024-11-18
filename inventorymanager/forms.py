@@ -43,3 +43,12 @@ class ItemForm(forms.Form):
             }
         ),
     )
+    item_type = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Item Type",
+                "class": "px-5 py-3 rounded-md bg-martinique-950",
+            }
+        )
+    )

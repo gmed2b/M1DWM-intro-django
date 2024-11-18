@@ -12,7 +12,8 @@ class Player(models.Model):
 class Inventory(models.Model):
   player = models.ForeignKey(Player, on_delete=models.CASCADE)
   item_name = models.CharField(max_length=100)
+  item_type = models.CharField(max_length=100)
   item_quantity = models.IntegerField()
 
   def __str__(self):
-      return f"{self.item_name} ({self.item_quantity})"
+      return f"{self.item_name} ({self.item_type}, {self.item_quantity})"
